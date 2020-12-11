@@ -1,4 +1,4 @@
-package kr.co.fastcampus;
+package kr.co.fastcampus.cli;
 
 import lombok.*;
 
