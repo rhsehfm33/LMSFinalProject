@@ -2,6 +2,8 @@ package kr.co.fastcampus.cli;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.sql.*;
 
@@ -11,27 +13,8 @@ public class Main {
     public static void main(String[] args) throws ClassNotFoundException {
         logger.info("Hello world!!");
 
-        Class.forName("org.h2.Driver");
-        var url = "jdbc:h2:mem:test;MODE=MySQL;";
-
-        try (var connection = DriverManager.getConnection(url, "sa", "");
-            var statement = connection.createStatement())   {
-
-            connection.setAutoCommit(false);
-            statement.execute("create table member(id int auto_increment, username varchar(255) not null, password varchar(255) not null, primary key(id))");
-            try {
-                statement.executeUpdate("insert into member(username, password) values('minseong', '1234')");
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-            }
-
-            var resultSet = statement.executeQuery("select id, username, password from member");
-            while (resultSet.next()) {
-                Member member = new Member(resultSet);
-                logger.info(member.toString());
-            }
-        } catch (SQLException e) {
-        }
+        ApplicationContext context = new ClassPathXmlApplicationContext("dao.xml");
+        Dao dao = context.getBean(Dao.class);
+        dao.run();
     }
 }
