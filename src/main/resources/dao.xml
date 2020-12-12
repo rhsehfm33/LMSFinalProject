@@ -4,9 +4,22 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="daoFactory" class="kr.co.fastcampus.cli.DaoFactory"/>
-    <bean id="dao" class="kr.co.fastcampus.cli.Dao"
-          factory-bean="daoFactory"
-          factory-method="createDao"/>
+    <bean id="connectionFactory" class="kr.co.fastcampus.cli.ConnectionFactory">
+        <constructor-arg name="url" value="jdbc:h2:mem:test"/>
+        <constructor-arg name="user" value="sa"/>
+        <constructor-arg name="password" value=""/>
+    </bean>
+
+    <bean id="connection" class="java.sql.Connection"
+        factory-bean="connectionFactory"
+        factory-method="createConnection"/>
+
+    <bean id="dao" class="kr.co.fastcampus.cli.Dao">
+        <constructor-arg ref="connection"/>
+    </bean>
+
+    <bean id="dao2" class="kr.co.fastcampus.cli.Dao2">
+        <constructor-arg ref="connection"/>
+    </bean>
 
 </beans>
