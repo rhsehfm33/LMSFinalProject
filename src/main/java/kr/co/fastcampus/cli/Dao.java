@@ -14,6 +14,14 @@ public class Dao {
         this.connection = connection;
     }
 
+    void init() {
+        log.info("dao init");
+    }
+
+    void destroy() {
+        log.info("dao destroy");
+    }
+
     public void run() throws SQLException {
         var statement = connection.createStatement();
         connection.setAutoCommit(false);
