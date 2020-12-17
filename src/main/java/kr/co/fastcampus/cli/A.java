@@ -1,20 +1,30 @@
 package kr.co.fastcampus.cli;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import java.util.Map;
 
 @Slf4j
-public class A implements ApplicationContextAware {
-    private ApplicationContext applicationContext;
+@Component
+public class A {
+//    @Autowired private B b;
+    @Autowired ApplicationContext context;
+    @Value("#{systemProperties['hello']}") String property;
 
+    @PostConstruct
     void init() {
-        log.error(">> " + applicationContext);
+        log.error("A post construct");
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    @PreDestroy
+    void destroy() {
+        log.error("A pre destroy");
     }
 }
