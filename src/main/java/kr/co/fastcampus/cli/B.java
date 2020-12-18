@@ -2,6 +2,7 @@ package kr.co.fastcampus.cli;
 
 import org.springframework.stereotype.Component;
 
-@Component
+import javax.inject.Named;
+
 public class B {
 }

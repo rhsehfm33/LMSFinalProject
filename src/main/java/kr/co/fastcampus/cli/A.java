@@ -9,21 +9,23 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Map;
 
 @Slf4j
-@Component
 public class A {
-//    @Autowired private B b;
-    @Autowired ApplicationContext context;
-    @Value("#{systemProperties['hello']}") String property;
 
-    @PostConstruct
-    void init() {
-        log.error("A post construct");
+    private B b;
+
+    public A(B b) {
+        this.b = b;
     }
 
-    @PreDestroy
+    void init() {
+        log.error("A post construct : " + b);
+    }
+
     void destroy() {
         log.error("A pre destroy");
     }

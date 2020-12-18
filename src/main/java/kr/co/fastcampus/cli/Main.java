@@ -23,9 +23,11 @@ public class Main {
 
     public static void main(String[] args) throws SQLException {
         logger.info("Hello world!!");
-        ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
-        B b = context.getBean(B.class);
-        log.info("" + b);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.register(AppConfig.class);
+        context.refresh();
+        Dao dao = context.getBean(Dao.class);
+        dao.run();
         context.close();
     }
 }
