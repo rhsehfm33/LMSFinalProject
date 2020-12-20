@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+    <aop:config>
+        <aop:aspect id="myAspect" ref="aBean">
+            <aop:pointcut id="businessService" expression="execution(* kr.co.fastcampus.cli.Dao.insert(..))"/>
+            <aop:around pointcut-ref="businessService" method="aroundTransaction"/>
+        </aop:aspect>
+    </aop:config>
+
+    <bean id="aBean" class="kr.co.fastcampus.cli.aop.TransactionBean">
+        <constructor-arg ref="connection"/>
+    </bean>
+    <bean id="service" class="kr.co.fastcampus.cli.aop.Service">
+    </bean>
+
+    <bean id="connectionFactory" class="kr.co.fastcampus.cli.ConnectionFactory">
+        <constructor-arg name="driverClass" value="org.h2.Driver"/>
+        <constructor-arg name="url" value="jdbc:h2:mem:test"/>
+        <constructor-arg name="user" value="sa"/>
+        <constructor-arg name="password" value=""/>
+    </bean>
+
+    <bean id="connection" class="java.sql.Connection"
+          factory-bean="connectionFactory"
+          factory-method="createConnection" />
+
+    <bean id="dao" class="kr.co.fastcampus.cli.Dao">
+        <constructor-arg ref="connection"/>
+    </bean>
+
+    <bean class="kr.co.fastcampus.cli.AppConfig" />
+
+
+</beans>
