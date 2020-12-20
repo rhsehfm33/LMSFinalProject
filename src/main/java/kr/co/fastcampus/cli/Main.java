@@ -1,7 +1,8 @@
 package kr.co.fastcampus.cli;
 
-import kr.co.fastcampus.cli.aop.TransactionBean;
-import kr.co.fastcampus.cli.service.MyService;
+import kr.co.fastcampus.cli.config.AppConfig;
+import kr.co.fastcampus.cli.controller.MemberController;
+import kr.co.fastcampus.cli.dao.MemberDao;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import javax.sql.DataSource;
 import java.sql.*;
+import java.util.Scanner;
 
 @Slf4j
 @Configuration
@@ -20,14 +23,21 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         context.register(AppConfig.class);
-        context.register(TransactionBean.class);
         context.refresh();
 
-        createTable(context.getBean(Connection.class));
+        createTable(context.getBean(DataSource.class).getConnection());
 
-        Dao dao = context.getBean(Dao.class);
-        dao.insert();
-        dao.print();
+        System.out.println("============== 사용자의 username, password를 입력해주세요. ==============");
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("username : ");
+        String username = scanner.nextLine();
+        System.out.println("password : ");
+        String password = scanner.nextLine();
+
+        MemberController controller = context.getBean(MemberController.class);
+        controller.insert(username, password);
+        controller.print();
 
         context.close();
     }

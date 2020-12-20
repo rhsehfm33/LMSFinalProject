@@ -1,4 +1,4 @@
-package kr.co.fastcampus.cli;
+package kr.co.fastcampus.cli.entity;
 
 import lombok.*;
 
